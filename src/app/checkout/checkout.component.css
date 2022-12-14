@@ -1,0 +1,11 @@
+td {
+    padding: 10px;
+    border: 1px solid black;
+}
+
+input {
+   
+    text-align: center;
+    width: 2em !important;
+ 
+}

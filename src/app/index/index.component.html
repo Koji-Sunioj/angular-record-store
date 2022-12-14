@@ -1,0 +1,20 @@
+
+<table > 
+    <tr>
+        <th>Artist</th>
+        <th>Title</th>
+        <th>Released</th>
+        <th>Stock</th>
+        <th>Price</th>
+    </tr>
+    <tr *ngFor="let album of _dataService.albums">
+        <td>{{album.Artist}}</td>
+        <td>{{album.Title}}</td>
+        <td>{{album.ReleaseDate}}</td>
+        <td>{{album.Stock}}</td>
+        <td>{{album.Price}}</td>
+        <td><button (click)="onSave(album.AlbumId)" [disabled]="album.Stock < 1">Buy</button></td>
+    </tr>
+</table>
+<br>
+<a [routerLink]="['/checkout/']" *ngIf="_dataService.cart.length > 0" >your selected items: {{items}}</a>

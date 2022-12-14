@@ -1,0 +1,27 @@
+<div *ngIf="_dataService.cart.length > 0">
+    <p>check out your order</p>
+    <table> 
+        <tr>
+            <th>Artist</th>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Quantity</th>
+        </tr>
+        <tr *ngFor="let cartItem of _dataService.cart;  let i = index">
+            <td>{{cartItem.Artist}}</td>
+            <td>{{cartItem.Title}}</td>
+            <td>{{cartItem.Price}}</td>
+            <td>
+                <div><input value="{{cartItem.Quantity}}"></div>
+            </td>
+        </tr>
+    </table>
+    <button (click)="updateCart()">update cart</button>
+    <button (click)="clearCart()">clear cart</button>
+</div>
+
+<div *ngIf="_dataService.cart.length === 0">
+    <a [routerLink]="['/']">your cart is empty</a>
+</div>
+
+

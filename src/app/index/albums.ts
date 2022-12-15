@@ -37,6 +37,14 @@ export const albums = [
     Price: 9.5,
   },
   {
+    AlbumId: 51,
+    Title: 'bloodhymns',
+    ReleaseDate: '2003-03-21',
+    Stock: 5,
+    Artist: 'necrophobic',
+    Price: 11.5,
+  },
+  {
     AlbumId: 47,
     Title: 'nightmare lord',
     ReleaseDate: '2021-02-28',

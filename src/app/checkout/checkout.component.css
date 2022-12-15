@@ -9,3 +9,9 @@ input {
     width: 2em !important;
  
 }
+
+#cart-buttons
+{
+    padding-top: 10px;
+    
+}

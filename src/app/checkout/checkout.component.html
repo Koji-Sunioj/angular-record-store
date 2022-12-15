@@ -16,12 +16,14 @@
             </td>
         </tr>
     </table>
-    <button (click)="updateCart()">update cart</button>
-    <button (click)="clearCart()">clear cart</button>
+    <div id="cart-buttons">
+        <button (click)="updateCart()">update cart</button>
+        <button (click)="clearCart()">clear cart</button>
+    </div>
 </div>
 
-<div *ngIf="_dataService.cart.length === 0">
-    <a [routerLink]="['/']">your cart is empty</a>
+<div *ngIf="_dataService.items === 0">
+    <p>your cart is empty</p>
 </div>
 
 

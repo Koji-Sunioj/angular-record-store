@@ -3,3 +3,8 @@ td {
     border: 1px solid black;
 }
 
+
+#search {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

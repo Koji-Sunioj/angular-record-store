@@ -20,5 +20,6 @@ export class CheckoutComponent {
       found.Stock += cartItem.Quantity;
     });
     this._dataService.cart = new Array();
+    this._dataService.items = 0;
   }
 }

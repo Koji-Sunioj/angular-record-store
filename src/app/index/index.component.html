@@ -1,20 +1,35 @@
+<div id="search">
+    <label for="search">search: </label>
+    <input type="search" name="search" placeholder="album or artist name" (change)="search($event)">
+</div>
+
 
 <table > 
     <tr>
-        <th>Artist</th>
-        <th>Title</th>
-        <th>Released</th>
-        <th>Stock</th>
-        <th>Price</th>
+        <th *ngFor="let header of tableHeaders" style="cursor: pointer;" (click)="changeSort(header)">
+            <ng-container *ngIf="header===sortBy.header; then highlighted; else not"></ng-container>
+            <ng-template #highlighted>
+                <ng-container
+                    *ngIf="sortBy.direction === 'ascending'; then up; else down">
+                </ng-container>
+                <ng-template #up>
+                    {{header}}&uarr;
+                </ng-template>
+                <ng-template #down>
+                    {{header}}&darr;
+                </ng-template>
+            </ng-template>
+            <ng-template #not>
+                {{header}}
+            </ng-template>               
+        </th>
     </tr>
-    <tr *ngFor="let album of _dataService.albums">
-        <td>{{album.Artist}}</td>
-        <td>{{album.Title}}</td>
+    <tr *ngFor="let album of filtered">
+        <td><a [routerLink]="['/artist/',album.Artist]">{{album.Artist}}</a> </td>
+        <td><a [routerLink]="['/album/',album.AlbumId]">{{album.Title}}</a></td>
         <td>{{album.ReleaseDate}}</td>
         <td>{{album.Stock}}</td>
-        <td>{{album.Price}}</td>
-        <td><button (click)="onSave(album.AlbumId)" [disabled]="album.Stock < 1">Buy</button></td>
+        <td>&euro; {{album.Price.toFixed(2)}}</td>
     </tr>
 </table>
 <br>
-<a [routerLink]="['/checkout/']" *ngIf="_dataService.cart.length > 0" >your selected items: {{items}}</a>

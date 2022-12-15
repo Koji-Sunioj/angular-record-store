@@ -1,39 +1,88 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
-import { CartItem } from './albums';
-import { albums, Album } from './albums';
+import { Album } from './albums';
 
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
   styleUrls: ['./index.component.css'],
 })
-export class IndexComponent {
-  @Output() newItemEvent = new EventEmitter<number>();
+export class IndexComponent implements OnInit {
   title = 'testapp';
-  items = 0;
-  constructor(public _dataService: DataService) {}
-  onSave(AlbumId: number): void {
-    const album = this._dataService.albums.find(
-      (album) => album.AlbumId === AlbumId
-    );
-    album!.Stock--;
-
-    const duplicate = this._dataService.cart.find(
-      (album) => album.AlbumId == AlbumId
-    );
-    if (duplicate) {
-      duplicate.Quantity++;
-    } else {
-      const cartItem: CartItem = {
-        Artist: album?.Artist!,
-        AlbumId: album?.AlbumId!,
-        Quantity: 1,
-        Title: album?.Title!,
-        Price: album?.Price!,
-      };
-      this._dataService.cart.push(cartItem);
+  filtered: Album[];
+  sortBy: { header: string; direction: string } = {
+    header: 'Artist',
+    direction: 'ascending',
+  };
+  tableHeaders: string[];
+  constructor(public _dataService: DataService) {
+    this.sortBy = {
+      header: 'Artist',
+      direction: 'ascending',
+    };
+    this.tableHeaders = ['Artist', 'Title', 'Released', 'Stock', 'Price'];
+  }
+  ngOnInit(): void {
+    this.filtered = this._dataService.albums;
+    this.filtered.sort(function (a, b) {
+      if (a.Artist < b.Artist) {
+        return -1;
+      }
+      if (a.Artist > b.Artist) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+  compareFn(a: any, b: any) {
+    console.log(this.sortBy);
+    if (a[this.sortBy.header] < b.Artist) {
+      return -1;
     }
-    this.items++;
+    if (a.Artist > b.Artist) {
+      return 1;
+    }
+    return 0;
+  }
+
+  changeSort(header: string) {
+    if (header === this.sortBy.header) {
+      this.sortBy.direction =
+        this.sortBy.direction === 'descending' ? 'ascending' : 'descending';
+    } else {
+      this.sortBy.header = header;
+    }
+    const key = header === 'Released' ? 'ReleaseDate' : (header as keyof Album);
+
+    if (this.sortBy.direction === 'ascending') {
+      this.filtered.sort(function (a, b) {
+        if (a[key] < b[key]) {
+          return -1;
+        }
+        if (a[key] > b[key]) {
+          return 1;
+        }
+        return 0;
+      });
+    } else {
+      this.filtered.sort(function (a, b) {
+        if (a[key] < b[key]) {
+          return 1;
+        }
+        if (a[key] > b[key]) {
+          return -1;
+        }
+        return 0;
+      });
+    }
+  }
+
+  search(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.filtered = this._dataService.albums.filter(
+      (item) =>
+        item.Artist.includes(filterValue) || item.Title.includes(filterValue)
+    );
+    this.changeSort(this.sortBy.header);
   }
 }

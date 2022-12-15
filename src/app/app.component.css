@@ -1,0 +1,25 @@
+#toolbar 
+{
+    display: flex;
+    justify-content: space-between;
+    background-color: lightblue;
+    padding: 10px;
+}
+
+#header > a {
+ text-decoration: none;
+ color: black;
+}
+
+#cart 
+{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#cart > a 
+{
+    text-decoration: none; 
+}
+

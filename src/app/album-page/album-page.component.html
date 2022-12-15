@@ -1,0 +1,6 @@
+<h3>{{album.Artist}} - {{album.Title}}</h3>
+<p>released: {{album.ReleaseDate}}</p>
+<p>stock: {{album.Stock}}</p>
+<p>price: &euro;{{album.Price.toFixed(2)}}</p>
+<br>
+<button (click)="onSave(album.AlbumId)" [disabled]="album.Stock < 1">Buy</button>

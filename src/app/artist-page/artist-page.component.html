@@ -1,0 +1,7 @@
+<h3>{{Artist}}</h3>
+<h4>Discography: </h4>
+<div *ngFor="let album of albums">
+    <ul>
+        <li><a [routerLink]="['/album/',album.AlbumId]">{{album.Title}}</a></li>
+    </ul>
+</div>

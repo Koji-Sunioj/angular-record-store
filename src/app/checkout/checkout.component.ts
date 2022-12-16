@@ -10,7 +10,9 @@ import { Album } from '../index/albums';
 })
 export class CheckoutComponent {
   bill: number;
+  messages: string[];
   constructor(public _dataService: DataService) {
+    this.messages = [];
     this.bill = _dataService.cart.reduce(
       (accumulator, currentValue) =>
         accumulator + currentValue.Price * currentValue.Quantity,
@@ -18,35 +20,46 @@ export class CheckoutComponent {
     );
   }
   updateCart(event: Event) {
+    this.messages = [];
     event?.preventDefault();
-
-    const nodes = (event.target as any).elements;
+    const nodes = (event.currentTarget as HTMLFormElement).elements;
 
     for (let i = 0; i < nodes.length; i++) {
-      if (nodes[i].nodeName === 'INPUT' && nodes[i].type === 'text') {
-        const id = Number(nodes[i].name.split('-')[1]);
-        const value = Number(nodes[i].value);
-        const cartItem = this._dataService.cart.find(
-          (item) => item.AlbumId === id
-        );
-        const album = this._dataService.albums.find(
-          (item) => item.AlbumId === id
-        );
-        const difference = value - cartItem?.Quantity!;
+      const node = nodes[i] as HTMLInputElement;
 
-        if (album!.Stock - difference < 0 || value < 0) {
-          nodes[i].value = cartItem?.Quantity;
-          alert("can't do that");
-        } else {
-          album!.Stock -= difference;
-          cartItem!.Quantity += difference;
-          if (value === 0) {
-            this._dataService.cart = this._dataService.cart.filter(
-              (item) => item.AlbumId !== id
-            );
+      node.nodeName === 'INPUT' &&
+        (() => {
+          const id = Number(node.name.split('-')[1]);
+          const value = Number(node.value);
+          const cartItem = this._dataService.cart.find(
+            (item) => item.AlbumId === id
+          );
+          const album = this._dataService.albums.find(
+            (item) => item.AlbumId === id
+          );
+          const difference = value - cartItem?.Quantity!;
+
+          const shouldnt =
+            album!.Stock - difference < 0 || value < 0 || isNaN(value)
+              ? 'shouldnt'
+              : 'should';
+
+          switch (shouldnt) {
+            case 'shouldnt':
+              node.value = String(cartItem?.Quantity);
+              this.messages.push(cartItem?.Title!);
+              break;
+            case 'should':
+              album!.Stock -= difference;
+              cartItem!.Quantity += difference;
+              if (value === 0) {
+                this._dataService.cart = this._dataService.cart.filter(
+                  (item) => item.AlbumId !== id
+                );
+              }
+              break;
           }
-        }
-      }
+        })();
     }
     this._dataService.items = this._dataService.cart.reduce(
       (accumulator, currentValue) => accumulator + currentValue.Quantity,

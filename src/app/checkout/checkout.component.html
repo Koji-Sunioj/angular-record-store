@@ -23,7 +23,13 @@
             <button (click)="clearCart($event)">clear cart</button>
         </div>
     </form>
+    <div *ngIf="messages.length > 0">
+        <p>invalid values for <strong>{{messages.join(", ")}}</strong></p>
+        
+    </div>
+   
 </div>
+
 
 <div *ngIf="_dataService.items === 0">
     <p>your cart is empty</p>

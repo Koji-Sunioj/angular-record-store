@@ -1,25 +1,28 @@
 <div *ngIf="_dataService.cart.length > 0">
     <p>check out your order</p>
-    <table> 
-        <tr>
-            <th>Artist</th>
-            <th>Title</th>
-            <th>Price</th>
-            <th>Quantity</th>
-        </tr>
-        <tr *ngFor="let cartItem of _dataService.cart;  let i = index">
-            <td>{{cartItem.Artist}}</td>
-            <td>{{cartItem.Title}}</td>
-            <td>{{cartItem.Price}}</td>
-            <td>
-                <div><input value="{{cartItem.Quantity}}"></div>
-            </td>
-        </tr>
-    </table>
-    <div id="cart-buttons">
-        <button (click)="updateCart()">update cart</button>
-        <button (click)="clearCart()">clear cart</button>
-    </div>
+    <form (ngSubmit)="updateCart($event)">
+        <table> 
+            <tr>
+                <th>Artist</th>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </tr>
+            <tr *ngFor="let cartItem of _dataService.cart;  let i = index">
+                <td>{{cartItem.Artist}}</td>
+                <td>{{cartItem.Title}}</td>
+                <td>&euro; {{cartItem.Price.toFixed(2)}}</td>
+                <td>
+                    <div><input value="{{cartItem.Quantity}}" name="cartItem-{{cartItem.AlbumId}}"></div>
+                </td>
+            </tr>
+        </table>
+        <p>Your bill: &euro; {{bill.toFixed(2)}}</p>
+        <div id="cart-buttons">
+            <button type="submit">update cart</button>
+            <button (click)="clearCart($event)">clear cart</button>
+        </div>
+    </form>
 </div>
 
 <div *ngIf="_dataService.items === 0">

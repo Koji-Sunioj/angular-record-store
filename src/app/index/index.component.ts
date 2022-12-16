@@ -24,36 +24,10 @@ export class IndexComponent implements OnInit {
   }
   ngOnInit(): void {
     this.filtered = this._dataService.albums;
-    this.filtered.sort(function (a, b) {
-      if (a.Artist < b.Artist) {
-        return -1;
-      }
-      if (a.Artist > b.Artist) {
-        return 1;
-      }
-      return 0;
-    });
+    this.compareFn(this.sortBy.header);
   }
-  compareFn(a: any, b: any) {
-    console.log(this.sortBy);
-    if (a[this.sortBy.header] < b.Artist) {
-      return -1;
-    }
-    if (a.Artist > b.Artist) {
-      return 1;
-    }
-    return 0;
-  }
-
-  changeSort(header: string) {
-    if (header === this.sortBy.header) {
-      this.sortBy.direction =
-        this.sortBy.direction === 'descending' ? 'ascending' : 'descending';
-    } else {
-      this.sortBy.header = header;
-    }
+  compareFn(header: string) {
     const key = header === 'Released' ? 'ReleaseDate' : (header as keyof Album);
-
     if (this.sortBy.direction === 'ascending') {
       this.filtered.sort(function (a, b) {
         if (a[key] < b[key]) {
@@ -77,12 +51,22 @@ export class IndexComponent implements OnInit {
     }
   }
 
+  changeSort(header: string) {
+    if (header === this.sortBy.header) {
+      this.sortBy.direction =
+        this.sortBy.direction === 'descending' ? 'ascending' : 'descending';
+    } else {
+      this.sortBy.header = header;
+    }
+    this.compareFn(header);
+  }
+
   search(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.filtered = this._dataService.albums.filter(
       (item) =>
         item.Artist.includes(filterValue) || item.Title.includes(filterValue)
     );
-    this.changeSort(this.sortBy.header);
+    this.compareFn(this.sortBy.header);
   }
 }
